@@ -4,13 +4,13 @@ export const mockData: AppData = {
   currentUser: {
     id: 'u1',
     name: 'Somsak Dev',
-    avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Somsak',
+    avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Somsak',
     email: 'somsak@example.com'
   },
   users: [
-    { id: 'u1', name: 'Somsak Dev', avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Somsak' },
-    { id: 'u2', name: 'Jane Designer', avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jane' },
-    { id: 'u3', name: 'Bob Manager', avatarUrl: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bob' }
+    { id: 'u1', name: 'Somsak Dev', avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Somsak' },
+    { id: 'u2', name: 'Jane Designer', avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Jane' },
+    { id: 'u3', name: 'Bob Manager', avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Bob' }
   ],
   projects: [
     {

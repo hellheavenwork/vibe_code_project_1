@@ -53,7 +53,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
       <div
         ref={setNodeRef}
         style={style}
-        className="h-32 w-full rounded-xl border-2 border-dashed border-blue-200 bg-blue-50/30"
+        className="h-32 w-full rounded-xl border-2 border-dashed border-blue-200 bg-blue-50/30 dark:border-blue-900/50 dark:bg-blue-900/10"
       />
     );
   }
@@ -65,8 +65,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
       {...attributes}
       {...listeners}
       className={cn(
-        'group relative flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-blue-300 hover:shadow-md cursor-grab active:cursor-grabbing overflow-hidden',
-        isOverlay && 'border-blue-400 shadow-xl'
+        'group relative flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-blue-300 hover:shadow-md cursor-grab active:cursor-grabbing overflow-hidden dark:bg-zinc-900 dark:border-zinc-800 dark:hover:border-blue-900',
+        isOverlay && 'border-blue-400 shadow-xl dark:border-blue-600'
       )}
     >
       {/* Color Indicator */}
@@ -77,7 +77,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
       <div className="flex items-start justify-between">
         <div className="flex flex-wrap gap-1.5">
           {task.tags.map((tag) => (
-            <Badge key={tag} className="bg-gray-100 text-[10px] text-gray-600">
+            <Badge key={tag} className="bg-gray-100 text-[10px] text-gray-600 dark:bg-zinc-800 dark:text-zinc-400">
               {tag}
             </Badge>
           ))}
@@ -88,7 +88,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
               e.stopPropagation();
               onEdit?.();
             }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-blue-500 p-1 rounded-md hover:bg-blue-50 cursor-pointer"
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-blue-500 p-1 rounded-md hover:bg-blue-50 cursor-pointer dark:text-zinc-600 dark:hover:text-blue-400 dark:hover:bg-blue-900/20"
             title="Edit Task"
           >
             <MoreVertical className="h-4 w-4" />
@@ -98,7 +98,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
               e.stopPropagation();
               onDelete?.();
             }}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500 p-1 rounded-md hover:bg-red-50 cursor-pointer"
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500 p-1 rounded-md hover:bg-red-50 cursor-pointer dark:text-zinc-600 dark:hover:text-red-400 dark:hover:bg-red-900/20"
             title="Delete Task"
           >
             <Trash2 className="h-4 w-4" />
@@ -106,12 +106,12 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
         </div>
       </div>
 
-      <h4 className="text-sm font-semibold text-gray-900 leading-tight">
+      <h4 className="text-sm font-semibold text-gray-900 leading-tight dark:text-zinc-100">
         {task.title}
       </h4>
 
       <div className="flex items-center justify-between mt-1">
-        <div className="flex items-center gap-3 text-gray-400">
+        <div className="flex items-center gap-3 text-gray-400 dark:text-zinc-500">
           {task.commentsCount > 0 && (
             <div className="flex items-center gap-1">
               <MessageSquare className="h-3.5 w-3.5" />
@@ -132,7 +132,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ task, isOverlay, onDelet
             <img
               src={assignee.avatarUrl}
               alt={assignee.name}
-              className="h-6 w-6 rounded-full border border-white bg-gray-100"
+              className="h-6 w-6 rounded-full border border-white bg-gray-100 dark:border-zinc-900 dark:bg-zinc-800"
               referrerPolicy="no-referrer"
             />
           )}

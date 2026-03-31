@@ -171,8 +171,8 @@ export default function ProjectBoard() {
             <span className="text-xl font-bold">{project.name.charAt(0)}</span>
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{project.name}</h1>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-zinc-100">{project.name}</h1>
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-zinc-400">
               <Users className="h-4 w-4" />
               <span>{project.members.length} Members</span>
             </div>
@@ -180,11 +180,11 @@ export default function ProjectBoard() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex rounded-lg border border-gray-200 bg-white p-1">
+          <div className="flex rounded-lg border border-gray-200 bg-white p-1 dark:bg-zinc-900 dark:border-zinc-800">
             <button
               onClick={() => setView('kanban')}
               className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
-                view === 'kanban' ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+                view === 'kanban' ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-100'
               }`}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -193,7 +193,7 @@ export default function ProjectBoard() {
             <button
               onClick={() => setView('list')}
               className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-all ${
-                view === 'list' ? 'bg-blue-50 text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-900'
+                view === 'list' ? 'bg-blue-50 text-blue-600 shadow-sm dark:bg-blue-900/20 dark:text-blue-400' : 'text-gray-500 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-zinc-100'
               }`}
             >
               <List className="h-4 w-4" />
@@ -213,7 +213,7 @@ export default function ProjectBoard() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
             placeholder="Search tasks..."
-            className="pl-10"
+            className="pl-10 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -222,7 +222,7 @@ export default function ProjectBoard() {
           <Button 
             variant="outline" 
             size="sm" 
-            className="gap-2 cursor-pointer"
+            className="gap-2 cursor-pointer dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-100"
             onClick={() => setIsFilterModalOpen(!isFilterModalOpen)}
           >
             <Filter className="h-4 w-4" />
@@ -230,10 +230,10 @@ export default function ProjectBoard() {
           </Button>
 
           {isFilterModalOpen && (
-            <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gray-200 bg-white p-4 shadow-xl">
+            <div className="absolute right-0 top-full z-50 mt-2 w-64 rounded-xl border border-gray-200 bg-white p-4 shadow-xl dark:bg-zinc-900 dark:border-zinc-800 dark:shadow-black/50">
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Priority</label>
+                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">Priority</label>
                   <div className="flex flex-wrap gap-1.5">
                     {['All', 'Low', 'Medium', 'High'].map((p) => (
                       <button
@@ -243,7 +243,7 @@ export default function ProjectBoard() {
                           "rounded-md px-2.5 py-1 text-xs font-medium transition-all cursor-pointer",
                           filterPriority === p 
                             ? "bg-blue-600 text-white" 
-                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                         )}
                       >
                         {p}
@@ -253,9 +253,9 @@ export default function ProjectBoard() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-500">Assignee</label>
+                  <label className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-zinc-400">Assignee</label>
                   <select
-                    className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-xs focus:border-blue-500 focus:outline-none cursor-pointer"
+                    className="w-full rounded-md border border-gray-200 bg-gray-50 p-2 text-xs focus:border-blue-500 focus:outline-none cursor-pointer dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-100"
                     value={filterAssignee}
                     onChange={(e) => setFilterAssignee(e.target.value)}
                   >
@@ -269,19 +269,19 @@ export default function ProjectBoard() {
                   </select>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                <div className="flex items-center justify-between border-t border-gray-100 pt-3 dark:border-zinc-800">
                   <button
                     onClick={() => {
                       setFilterPriority('All');
                       setFilterAssignee('All');
                     }}
-                    className="text-xs font-medium text-gray-400 hover:text-gray-600 cursor-pointer"
+                    className="text-xs font-medium text-gray-400 hover:text-gray-600 dark:hover:text-zinc-200 cursor-pointer"
                   >
                     Reset
                   </button>
                   <button 
                     onClick={() => setIsFilterModalOpen(false)}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-700 cursor-pointer"
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer"
                   >
                     Done
                   </button>
