@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { 
-  SortableContext, 
-  verticalListSortingStrategy 
-} from '@dnd-kit/sortable';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { KanbanCard } from './KanbanCard';
 import { Column, Task } from '../../types';
 import { Plus, MoreHorizontal } from 'lucide-react';
@@ -12,14 +9,14 @@ interface KanbanColumnProps {
   column: Column;
   tasks: Task[];
   onDeleteTask: (taskId: string) => void;
-  onEditTask: (task: Task) => void;
+  onOpenTaskDetail: (task: Task) => void;
   onAddTaskClick: () => void;
 }
 
-export const KanbanColumn: React.FC<KanbanColumnProps> = ({ column, tasks, onDeleteTask, onEditTask, onAddTaskClick }) => {
-  const { setNodeRef } = useDroppable({
-    id: column.id,
-  });
+export const KanbanColumn: React.FC<KanbanColumnProps> = ({
+  column, tasks, onDeleteTask, onOpenTaskDetail, onAddTaskClick,
+}) => {
+  const { setNodeRef } = useDroppable({ id: column.id });
 
   return (
     <div className="flex w-80 shrink-0 flex-col rounded-xl bg-gray-50/50 p-3 dark:bg-zinc-900/50">
@@ -35,27 +32,21 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = ({ column, tasks, onDel
         </button>
       </div>
 
-      <div
-        ref={setNodeRef}
-        className="flex flex-1 flex-col gap-3"
-      >
-        <SortableContext
-          items={tasks.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          {tasks.map((task) => (
-            <KanbanCard 
-              key={task.id} 
-              task={task} 
+      <div ref={setNodeRef} className="flex flex-1 flex-col gap-3">
+        <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+          {tasks.map(task => (
+            <KanbanCard
+              key={task.id}
+              task={task}
               onDelete={() => onDeleteTask(task.id)}
-              onEdit={() => onEditTask(task)}
+              onOpenDetail={() => onOpenTaskDetail(task)}
             />
           ))}
         </SortableContext>
 
-        <button 
+        <button
           onClick={onAddTaskClick}
-          className="flex w-full items-center gap-2 rounded-lg border border-dashed border-gray-300 p-3 text-sm font-medium text-gray-500 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 transition-all dark:border-zinc-800 dark:text-zinc-600 dark:hover:border-blue-900 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
+          className="flex w-full items-center gap-2 rounded-lg border border-dashed border-gray-300 p-3 text-sm font-medium text-gray-500 transition-all hover:border-blue-400 hover:bg-blue-50 hover:text-blue-600 dark:border-zinc-800 dark:text-zinc-600 dark:hover:border-blue-900 dark:hover:bg-blue-900/20 dark:hover:text-blue-400"
         >
           <Plus className="h-4 w-4" />
           Add Task

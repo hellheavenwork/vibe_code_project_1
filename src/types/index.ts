@@ -5,6 +5,9 @@ export interface User {
   name: string;
   avatarUrl: string;
   email?: string;
+  username?: string;
+  role?: string;       // 'admin' | 'member'
+  createdAt?: string;
 }
 
 export interface Project {

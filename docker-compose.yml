@@ -1,0 +1,50 @@
+services:
+
+  # ── Express API + Prisma + SQLite ─────────────────────────────────────────
+  api:
+    build:
+      context: .
+      target: api
+    container_name: taskflow-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL:    file:/app/data/taskflow.db
+      JWT_SECRET:      ${JWT_SECRET:-please-change-this-secret-in-production}
+      JWT_EXPIRES_IN:  ${JWT_EXPIRES_IN:-24h}
+      NODE_ENV:        production
+      PORT:            4000
+      # Allow requests only from the nginx frontend container (same Docker network)
+      ALLOWED_ORIGINS: http://localhost:3000
+    volumes:
+      # Persist the SQLite database across container restarts
+      - db_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4000/api/health"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+      start_period: 15s
+    # Do NOT expose port 4000 to the host — only nginx can reach the API
+    # (remove the comment below to expose API directly for debugging)
+    # ports:
+    #   - "4000:4000"
+
+  # ── nginx: serves React SPA + proxies /api → api container ────────────────
+  frontend:
+    build:
+      context: .
+      target: frontend
+      args:
+        GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+    container_name: taskflow-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  # Named volume — data survives container removal
+  db_data:
+    name: taskflow_db_data

@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Briefcase, User, Lock, ArrowRight, AlertCircle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Briefcase, User, Lock, ArrowRight, AlertCircle, UserPlus } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { motion } from 'motion/react';
+import { login } from '../api/auth';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,28 +14,24 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     if (!username || !password) {
       setError('Please enter both username and password');
       return;
     }
 
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      if (username === 'admin' && password === 'admin123') {
-        localStorage.setItem('isAuthenticated', 'true');
-        setIsLoading(false);
-        navigate('/');
-      } else {
-        setIsLoading(false);
-        setError('Invalid username or password');
-      }
-    }, 1000);
+    try {
+      await login(username, password);
+      navigate('/app');
+    } catch (err: any) {
+      setError(err.message || 'Invalid username or password');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -121,6 +118,16 @@ export default function Login() {
         <div className="text-center text-xs text-gray-400 dark:text-zinc-500">
           <p>Demo Credentials:</p>
           <p>Username: <span className="font-mono text-blue-500">admin</span> | Password: <span className="font-mono text-blue-500">admin123</span></p>
+        </div>
+
+        <div className="border-t border-gray-100 pt-4 text-center dark:border-zinc-800">
+          <Link
+            to="/register"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400"
+          >
+            <UserPlus className="h-4 w-4" />
+            Create a new account
+          </Link>
         </div>
       </motion.div>
     </div>

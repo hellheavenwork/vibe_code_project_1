@@ -1,15 +1,16 @@
 import { Search, Bell, Menu, Settings, LogOut, User, Sun, Moon } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { mockData } from '../../data/mockData';
 import { cn } from '../../lib/utils';
+import { useApp } from '../../context/AppContext';
+import { logout } from '../../api/auth';
 
 interface NavbarProps {
   onMenuClick?: () => void;
 }
 
 export const Navbar = ({ onMenuClick }: NavbarProps) => {
-  const { currentUser } = mockData;
+  const { currentUser } = useApp();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -21,7 +22,6 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
-  const [, forceUpdate] = useState({});
   const navigate = useNavigate();
 
   const toggleDarkMode = () => {
@@ -37,12 +37,9 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
   ];
 
   useEffect(() => {
-    const handleProfileUpdate = () => forceUpdate({});
     const handleThemeUpdate = (e: any) => setIsDarkMode(e.detail.isDarkMode);
-    
-    window.addEventListener('user-profile-updated', handleProfileUpdate);
     window.addEventListener('theme-updated', handleThemeUpdate as any);
-    
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsProfileOpen(false);
@@ -54,14 +51,13 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('user-profile-updated', handleProfileUpdate);
       window.removeEventListener('theme-updated', handleThemeUpdate as any);
     };
   }, []);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setIsProfileOpen(false);
-    localStorage.removeItem('isAuthenticated');
+    await logout();
     navigate('/login');
   };
 
@@ -160,12 +156,12 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
               className="flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-zinc-800 p-1.5 rounded-lg transition-colors cursor-pointer"
             >
               <div className="hidden text-right md:block">
-                <p className="text-sm font-semibold text-gray-900 dark:text-zinc-100">{currentUser.name}</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-zinc-100">{currentUser?.name}</p>
                 <p className="text-xs text-gray-500 dark:text-zinc-400">Member</p>
               </div>
               <img
-                src={currentUser.avatarUrl}
-                alt={currentUser.name}
+                src={currentUser?.avatarUrl}
+                alt={currentUser?.name}
                 className="h-9 w-9 rounded-full border border-gray-200 bg-gray-50 dark:border-zinc-700"
                 referrerPolicy="no-referrer"
               />
@@ -176,8 +172,8 @@ export const Navbar = ({ onMenuClick }: NavbarProps) => {
                 <div className="px-3 py-2 border-b border-gray-100 dark:border-zinc-800 mb-1">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
                 </div>
-                <Link 
-                  to="/settings" 
+                <Link
+                  to="/app/settings"
                   className="flex items-center gap-3 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-blue-400"
                   onClick={() => setIsProfileOpen(false)}
                 >

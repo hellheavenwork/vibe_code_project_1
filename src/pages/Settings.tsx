@@ -2,8 +2,9 @@ import { User, Mail, Bell, Shield, Palette, Check } from 'lucide-react';
 import { useState, FormEvent, useEffect } from 'react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
-import { mockData } from '../data/mockData';
 import { cn } from '../lib/utils';
+import { useApp } from '../context/AppContext';
+import { updateMe } from '../api/users';
 
 interface ToggleItemProps {
   title: string;
@@ -39,10 +40,10 @@ const ToggleItem = ({ title, desc, initialValue = true }: ToggleItemProps) => {
 };
 
 export default function Settings() {
-  const { currentUser } = mockData;
-  const [name, setName] = useState(currentUser.name);
-  const [email, setEmail] = useState(currentUser.email);
-  const [avatarUrl, setAvatarUrl] = useState(currentUser.avatarUrl);
+  const { currentUser, setCurrentUser } = useApp();
+  const [name, setName] = useState(currentUser?.name ?? '');
+  const [email, setEmail] = useState(currentUser?.email ?? '');
+  const [avatarUrl, setAvatarUrl] = useState(currentUser?.avatarUrl ?? '');
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -83,34 +84,19 @@ export default function Settings() {
     return () => window.removeEventListener('theme-updated', handleThemeUpdate as any);
   }, []);
 
-  const handleSave = (e: FormEvent) => {
+  const handleSave = async (e: FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Update mock data for real
-      mockData.currentUser.name = name;
-      mockData.currentUser.email = email;
-      mockData.currentUser.avatarUrl = avatarUrl;
-      
-      // Also update in the users list
-      const userInList = mockData.users.find(u => u.id === currentUser.id);
-      if (userInList) {
-        userInList.name = name;
-        userInList.email = email;
-        userInList.avatarUrl = avatarUrl;
-      }
-
-      // Notify other components (like Navbar) to re-render
-      window.dispatchEvent(new CustomEvent('user-profile-updated'));
-
-      setIsSaving(false);
+    try {
+      const updated = await updateMe({ name, email: email || undefined, avatarUrl });
+      setCurrentUser(updated);
       setShowSuccess(true);
-      
-      // Hide success message after 3 seconds
       setTimeout(() => setShowSuccess(false), 3000);
-    }, 800);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
